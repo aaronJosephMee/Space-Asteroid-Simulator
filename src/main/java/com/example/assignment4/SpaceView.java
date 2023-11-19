@@ -30,7 +30,6 @@ public class SpaceView extends StackPane implements Subscriber
     {
         // Clear canvas
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-//        gc.save();
 
         // Draw outer space
         gc.setFill(Color.BLACK);
@@ -48,40 +47,37 @@ public class SpaceView extends StackPane implements Subscriber
         // Draw asteroids
         for (SpaceObject asteroid: asteroids)
         {
+            gc.save();
             gc.setFill(Color.DARKGRAY);
             double translated_x = asteroid.getNormalizedX() * canvasSize;
             double translated_y = asteroid.getNormalizedY() * canvasSize;
 
             System.out.println("translated x: " + translated_x);
             System.out.println("translated y: " + translated_y);
-
-            gc.fillOval(translated_x - asteroid.getRadius(),
-                    translated_y - asteroid.getRadius(), 2.0 * asteroid.getRadius(),
-                    2.0 * asteroid.getRadius());
-
-            //TODO delete here + delete count too
-
+            System.out.println("Instanceof asteroid? " + (asteroid instanceof Asteroid));
 
             if(asteroid instanceof Asteroid)
             {
                 Asteroid typeCastAsteroid = (Asteroid) asteroid;
                 System.out.println("Asteroid: " + typeCastAsteroid + '\n');
 
+                //TODO delete here + delete count too
                 gc.setFill(Color.RED);
                 gc.setFont(new Font(15));
                 gc.fillText(Integer.toString(typeCastAsteroid.myIndex), translated_x - typeCastAsteroid.getRadius(),
                         translated_y - typeCastAsteroid.getRadius());
+                //TODO delete above here
 
-//                gc.translate(translated_x, translated_y);
-//                gc.setStroke(Color.RED);
-//                gc.strokePolygon(typeCastAsteroid.getxPoints(), typeCastAsteroid.getyPoints(),
-//                        typeCastAsteroid.getxPoints().length);
-//                gc.fillPolygon(typeCastAsteroid.getxPoints(), typeCastAsteroid.getyPoints(),
-//                        typeCastAsteroid.getxPoints().length);
-//                gc.restore();
+                gc.translate(translated_x, translated_y);
+                gc.setStroke(Color.RED);
+                gc.strokePolygon(typeCastAsteroid.getxPoints(), typeCastAsteroid.getyPoints(),
+                        typeCastAsteroid.getxPoints().length);
+                gc.setFill(Color.DARKGRAY);
+                gc.fillPolygon(typeCastAsteroid.getxPoints(), typeCastAsteroid.getyPoints(),
+                        typeCastAsteroid.getxPoints().length);
+                gc.restore();
             }
         }
-
     }
 
     public void receiveNotification(String channelName, List<SpaceObject> spaceObjectsList)
