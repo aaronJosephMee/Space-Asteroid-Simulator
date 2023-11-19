@@ -10,10 +10,12 @@ public class Asteroid extends SpaceObject
     private double[] xPoints;
     private double[] yPoints;
     private int sections;
+    public int myIndex = 0;
 
-    public Asteroid(double normalizedX, double normalizedY, double radius)
+    public Asteroid(double normalizedX, double normalizedY, double radius, int myIndex)
     {
         super(normalizedX, normalizedY, radius);
+        this.myIndex = myIndex;
 
         // Choose a random number of sections between 4 and 8
         sections = new Random().nextInt(4, 9);
@@ -44,6 +46,7 @@ public class Asteroid extends SpaceObject
                 yPoints[sectionNum] = yPoints[0];
             }
         }
+        myIndex++;
     }
 
     public double[] getxPoints()
@@ -60,6 +63,7 @@ public class Asteroid extends SpaceObject
     {
         return "X Points: " + Arrays.toString(xPoints)
                 + "\n          Y Points: " + Arrays.toString(yPoints)
-                + "\n          Sections: " + sections;
+                + "\n          Sections: " + sections
+                + "\n          Index: " + myIndex;
     }
 }

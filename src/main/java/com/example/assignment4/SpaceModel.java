@@ -45,7 +45,7 @@ public class SpaceModel
         Random random = new Random();
 
         asteroid = new Asteroid(random.nextDouble(), random.nextDouble(),
-                random.nextDouble(10, 19));
+                random.nextDouble(10, 19), asteroidList.size());
 
         asteroidList.add(asteroid);
 

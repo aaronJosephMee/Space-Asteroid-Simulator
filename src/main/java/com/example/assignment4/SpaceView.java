@@ -46,7 +46,6 @@ public class SpaceView extends StackPane implements Subscriber
         }
 
         // Draw asteroids
-        int count = 0;
         for (SpaceObject asteroid: asteroids)
         {
             gc.setFill(Color.DARKGRAY);
@@ -61,16 +60,18 @@ public class SpaceView extends StackPane implements Subscriber
                     2.0 * asteroid.getRadius());
 
             //TODO delete here + delete count too
-            gc.setFill(Color.RED);
-            gc.setFont(new Font(15));
-            gc.fillText(Integer.toString(count), translated_x - asteroid.getRadius(),
-                    translated_y - asteroid.getRadius());
-            count++;
+
 
             if(asteroid instanceof Asteroid)
             {
                 Asteroid typeCastAsteroid = (Asteroid) asteroid;
                 System.out.println("Asteroid: " + typeCastAsteroid + '\n');
+
+                gc.setFill(Color.RED);
+                gc.setFont(new Font(15));
+                gc.fillText(Integer.toString(typeCastAsteroid.myIndex), translated_x - typeCastAsteroid.getRadius(),
+                        translated_y - typeCastAsteroid.getRadius());
+
 //                gc.translate(translated_x, translated_y);
 //                gc.setStroke(Color.RED);
 //                gc.strokePolygon(typeCastAsteroid.getxPoints(), typeCastAsteroid.getyPoints(),
