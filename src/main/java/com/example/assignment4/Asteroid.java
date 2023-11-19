@@ -56,7 +56,8 @@ public class Asteroid extends SpaceObject
         return yPoints;
     }
 
-    public String toString(){
+    public String toString()
+    {
         return "X Points: " + Arrays.toString(xPoints)
                 + "\n          Y Points: " + Arrays.toString(yPoints)
                 + "\n          Sections: " + sections;

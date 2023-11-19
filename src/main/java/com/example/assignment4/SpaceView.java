@@ -4,6 +4,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,9 +46,10 @@ public class SpaceView extends StackPane implements Subscriber
         }
 
         // Draw asteroids
-        gc.setFill(Color.DARKGRAY);
+        int count = 0;
         for (SpaceObject asteroid: asteroids)
         {
+            gc.setFill(Color.DARKGRAY);
             double translated_x = asteroid.getNormalizedX() * canvasSize;
             double translated_y = asteroid.getNormalizedY() * canvasSize;
 
@@ -57,6 +59,13 @@ public class SpaceView extends StackPane implements Subscriber
             gc.fillOval(translated_x - asteroid.getRadius(),
                     translated_y - asteroid.getRadius(), 2.0 * asteroid.getRadius(),
                     2.0 * asteroid.getRadius());
+
+            //TODO delete here + delete count too
+            gc.setFill(Color.RED);
+            gc.setFont(new Font(15));
+            gc.fillText(Integer.toString(count), translated_x - asteroid.getRadius(),
+                    translated_y - asteroid.getRadius());
+            count++;
 
             if(asteroid instanceof Asteroid)
             {
