@@ -13,12 +13,12 @@ public class PublishSubscribe
         channels.put(key, subscribers);
     }
 
-    public void publishToChannel(String key, List<SpaceObject> listOfSubscribers)
+    public void publishToChannel(String key, List<SpaceObject> spaceObjectList)
     {
         ArrayList<Subscriber> subscribers = channels.get(key);
         for(Subscriber subscriber : subscribers)
         {
-            subscriber.receiveNotification(key, listOfSubscribers);
+            subscriber.receiveNotification(key, spaceObjectList);
         }
     }
 

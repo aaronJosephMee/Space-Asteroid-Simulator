@@ -12,7 +12,7 @@ public class MainUI extends StackPane
         SpaceController spaceController = new SpaceController();
         SpaceModel spaceModel = new SpaceModel();
         InteractionModel iModel = new InteractionModel();
-        SpaceView spaceView = new SpaceView(800);
+        SpaceView spaceView = new SpaceView(1000);
         PublishSubscribe publishSubscribe = new PublishSubscribe();
 
         // Add PublishSubscribe implementation:

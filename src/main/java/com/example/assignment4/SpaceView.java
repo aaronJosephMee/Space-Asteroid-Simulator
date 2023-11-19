@@ -7,8 +7,6 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Random;
 
 public class SpaceView extends StackPane implements Subscriber
 {
@@ -27,11 +25,11 @@ public class SpaceView extends StackPane implements Subscriber
         this.getChildren().add(canvas);
     }
 
-    // TODO
     public void drawOuterSpace()
     {
         // Clear canvas
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+//        gc.save();
 
         // Draw outer space
         gc.setFill(Color.BLACK);
@@ -52,27 +50,40 @@ public class SpaceView extends StackPane implements Subscriber
         {
             double translated_x = asteroid.getNormalizedX() * canvasSize;
             double translated_y = asteroid.getNormalizedY() * canvasSize;
-            // did not translate radius as that does not deal with location?
+
+            System.out.println("translated x: " + translated_x);
+            System.out.println("translated y: " + translated_y);
+
             gc.fillOval(translated_x - asteroid.getRadius(),
                     translated_y - asteroid.getRadius(), 2.0 * asteroid.getRadius(),
                     2.0 * asteroid.getRadius());
+
+            if(asteroid instanceof Asteroid)
+            {
+                Asteroid typeCastAsteroid = (Asteroid) asteroid;
+                System.out.println("Asteroid: " + typeCastAsteroid + '\n');
+//                gc.translate(translated_x, translated_y);
+//                gc.setStroke(Color.RED);
+//                gc.strokePolygon(typeCastAsteroid.getxPoints(), typeCastAsteroid.getyPoints(),
+//                        typeCastAsteroid.getxPoints().length);
+//                gc.fillPolygon(typeCastAsteroid.getxPoints(), typeCastAsteroid.getyPoints(),
+//                        typeCastAsteroid.getxPoints().length);
+//                gc.restore();
+            }
         }
 
     }
 
-    @Override
-    public void receiveNotification(String channelName, List<SpaceObject> listOfSubscribers)
+    public void receiveNotification(String channelName, List<SpaceObject> spaceObjectsList)
     {
         if(channelName.equals("create-star"))
         {
-            this.stars = listOfSubscribers;
+            this.stars = spaceObjectsList;
         }
         else if(channelName.equals("create-asteroid"))
         {
-            this.asteroids = listOfSubscribers;
+            this.asteroids = spaceObjectsList;
         }
         drawOuterSpace();
     }
-
-
 }
