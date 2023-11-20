@@ -18,12 +18,12 @@ public class PublishSubscribe
 
     // This currently doesn't work for iModel because we're passing a List of SpaceObjects,
     // and we need to notify the View of the worldRotation (which is a double)
-    public void publishToChannel(String key, List<SpaceObject> spaceObjectList)
+    public void publishToChannel(String key)
     {
         ArrayList<Subscriber> subscribers = channels.get(key);
         for(Subscriber subscriber : subscribers)
         {
-            subscriber.receiveNotification(key, spaceObjectList);
+            subscriber.receiveNotification(key);
         }
     }
 

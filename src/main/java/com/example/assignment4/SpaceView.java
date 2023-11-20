@@ -14,8 +14,11 @@ public class SpaceView extends StackPane implements Subscriber
     private final int canvasSize;
     Canvas canvas;
     GraphicsContext gc;
+    SpaceModel spaceModel;
+    InteractionModel iModel;
     List<SpaceObject> stars = new ArrayList<>();
     List<SpaceObject> asteroids = new ArrayList<>();
+    double worldRotation = 0;
 
     public SpaceView(int canvasSize)
     {
@@ -34,6 +37,12 @@ public class SpaceView extends StackPane implements Subscriber
         // Draw outer space
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        // Rotate depending on world rotation
+        gc.save();
+        gc.translate((double) canvasSize / 2, (double) canvasSize / 2); // Translate to the center
+        gc.rotate(worldRotation); // Rotate
+        gc.translate((double) -canvasSize / 2, (double) -canvasSize / 2);
 
         // Draw white dots for stars
         gc.setFill(Color.WHITE);
@@ -82,17 +91,33 @@ public class SpaceView extends StackPane implements Subscriber
                 gc.restore();
             }
         }
+        gc.restore();
     }
 
-    public void receiveNotification(String channelName, List<SpaceObject> spaceObjectsList)
+    public void setSpaceModel(SpaceModel spaceModel)
+    {
+        this.spaceModel = spaceModel;
+    }
+
+    public void setiModel(InteractionModel iModel)
+    {
+        this.iModel = iModel;
+    }
+
+    public void receiveNotification(String channelName)
     {
         if(channelName.equals("create-star"))
         {
-            this.stars = spaceObjectsList;
+            this.stars = spaceModel.getStars();
         }
         else if(channelName.equals("create-asteroid"))
         {
-            this.asteroids = spaceObjectsList;
+            this.asteroids = spaceModel.getAsteroidList();
+        }
+        else if(channelName.equals("world-rotate"))
+        {
+            //TODO update world rotation
+            this.worldRotation = iModel.getWorldRotation();
         }
         drawOuterSpace();
     }

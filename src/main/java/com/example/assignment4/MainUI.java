@@ -20,6 +20,9 @@ public class MainUI extends StackPane
         spaceController.setSpaceModel(spaceModel);
         spaceController.setiModel(iModel);
 
+        spaceView.setSpaceModel(spaceModel);
+        spaceView.setiModel(iModel);
+
         // Add PublishSubscribe implementation:
         ArrayList<Subscriber> subscribersForCreate = new ArrayList<>();
         ArrayList<Subscriber> subscribersForDelete = new ArrayList<>();
@@ -29,6 +32,8 @@ public class MainUI extends StackPane
 
         publishSubscribe.createChannel("create-asteroid", subscribersForCreate);
         publishSubscribe.createChannel("create-star", subscribersForCreate);
+        //TODO change the subscribersForCreate
+        publishSubscribe.createChannel("world-rotate", subscribersForCreate);
         publishSubscribe.createChannel("delete", subscribersForDelete);
 
         spaceModel.setPublisher(publishSubscribe);
@@ -48,6 +53,7 @@ public class MainUI extends StackPane
             public void handle(long now)
             {
                 spaceController.handleAnimationTick();
+                iModel.incrementWorldRotation(0.01);
             }
         };
 

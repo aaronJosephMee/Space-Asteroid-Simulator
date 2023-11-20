@@ -15,8 +15,9 @@ public class InteractionModel
         return worldRotation;
     }
 
-    public void setWorldRotation(double worldRotation)
+    public void incrementWorldRotation(double incr)
     {
-        this.worldRotation = worldRotation;
+        this.worldRotation += incr;
+        publisher.publishToChannel("world-rotate");
     }
 }
