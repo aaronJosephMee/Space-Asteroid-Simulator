@@ -52,6 +52,38 @@ public class SpaceModel
         publisher.publishToChannel("create-asteroid", asteroidList);
     }
 
+    public void moveAsteroids()
+    {
+        for (SpaceObject asteroid : asteroidList)
+        {
+            if (asteroid instanceof Asteroid)
+            {
+                //TODO this sets the normalized x and y instead of the translated ones,
+                // change if necessary
+                Asteroid tc_asteroid = (Asteroid) asteroid;
+                tc_asteroid.setNormalizedX(tc_asteroid.getNormalizedX() + tc_asteroid.getXVelocity());
+                tc_asteroid.setNormalizedY(tc_asteroid.getNormalizedY() + tc_asteroid.getYVelocity());
+            }
+        }
+        //TODO change this to update-asteroid
+        //publisher.publishToChannel("create-asteroid", asteroidList);
+    }
+
+    public void spinAsteroids()
+    {
+        for (SpaceObject asteroid : asteroidList)
+        {
+            if (asteroid instanceof Asteroid)
+            {
+                Asteroid tc_asteroid = (Asteroid) asteroid;
+                // Update asteroid's angle based on its angular velocity
+                tc_asteroid.setAngle(tc_asteroid.getAngle() + tc_asteroid.getAVelocity());
+            }
+        }
+        //TODO change this to update-asteroid
+        publisher.publishToChannel("create-asteroid", asteroidList);
+    }
+
     public void setPublisher(PublishSubscribe publisher)
     {
         this.publisher = publisher;

@@ -13,6 +13,11 @@ public class PublishSubscribe
         channels.put(key, subscribers);
     }
 
+    // Can this not have a spaceObjectList? This would need the View to have a
+    // direct reference to the Model/iModel so that it gets the changes.
+
+    // This currently doesn't work for iModel because we're passing a List of SpaceObjects,
+    // and we need to notify the View of the worldRotation (which is a double)
     public void publishToChannel(String key, List<SpaceObject> spaceObjectList)
     {
         ArrayList<Subscriber> subscribers = channels.get(key);

@@ -20,7 +20,18 @@ public class SpaceObject
 
     public void setNormalizedX(double normalizedX)
     {
-        this.normalizedX = normalizedX;
+        if(normalizedX <= 0.0)
+        {
+            this.normalizedX = 1.0;
+        }
+        else if (normalizedX >= 1.0)
+        {
+            this.normalizedX = 0.0;
+        }
+        else
+        {
+            this.normalizedX = normalizedX;
+        }
     }
 
     public double getNormalizedY()
@@ -30,7 +41,18 @@ public class SpaceObject
 
     public void setNormalizedY(double normalizedY)
     {
-        this.normalizedY = normalizedY;
+        if(normalizedY <= 0.0)
+        {
+            this.normalizedY = 1.0;
+        }
+        else if (normalizedY >= 1.0)
+        {
+            this.normalizedY = 0.0;
+        }
+        else
+        {
+            this.normalizedY = normalizedY;
+        }
     }
 
     public double getRadius()

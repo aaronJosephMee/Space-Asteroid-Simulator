@@ -1,5 +1,6 @@
 package com.example.assignment4;
 
+import javafx.animation.AnimationTimer;
 import javafx.scene.layout.StackPane;
 
 import java.util.ArrayList;
@@ -14,6 +15,10 @@ public class MainUI extends StackPane
         InteractionModel iModel = new InteractionModel();
         SpaceView spaceView = new SpaceView(850);
         PublishSubscribe publishSubscribe = new PublishSubscribe();
+
+        // Link them together
+        spaceController.setSpaceModel(spaceModel);
+        spaceController.setiModel(iModel);
 
         // Add PublishSubscribe implementation:
         ArrayList<Subscriber> subscribersForCreate = new ArrayList<>();
@@ -30,12 +35,23 @@ public class MainUI extends StackPane
         iModel.setPublisher(publishSubscribe);
 
         // Create 10 asteroids using createAsteroid() method
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 2; i++)
         {
             spaceModel.createAsteroid();
         }
 
         this.getChildren().add(spaceView);
+
+        AnimationTimer animationTimer = new AnimationTimer()
+        {
+            @Override
+            public void handle(long now)
+            {
+                spaceController.handleAnimationTick();
+            }
+        };
+
+        animationTimer.start();
     }
 
 }

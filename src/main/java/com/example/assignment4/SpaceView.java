@@ -47,34 +47,38 @@ public class SpaceView extends StackPane implements Subscriber
         // Draw asteroids
         for (SpaceObject asteroid: asteroids)
         {
-            gc.save();
-            gc.setFill(Color.DARKGRAY);
-            double translated_x = asteroid.getNormalizedX() * canvasSize;
-            double translated_y = asteroid.getNormalizedY() * canvasSize;
-
-            System.out.println("translated x: " + translated_x);
-            System.out.println("translated y: " + translated_y);
-            System.out.println("Instanceof asteroid? " + (asteroid instanceof Asteroid));
-
             if(asteroid instanceof Asteroid)
             {
-                Asteroid typeCastAsteroid = (Asteroid) asteroid;
-                System.out.println("Asteroid: " + typeCastAsteroid + '\n');
+                gc.save();
+                gc.setFill(Color.DARKGRAY);
+
+                Asteroid tc_asteroid = (Asteroid) asteroid;
+                System.out.println("Asteroid: " + tc_asteroid + '\n');
+
+                tc_asteroid.setXTranslation(tc_asteroid.getNormalizedX() * canvasSize);
+                tc_asteroid.setYTranslation(tc_asteroid.getNormalizedY() * canvasSize);
+
+                System.out.println("normalized x: " + tc_asteroid.getNormalizedX());
+                System.out.println("normalized y: " + tc_asteroid.getNormalizedY());
+                System.out.println("translated x: " + tc_asteroid.getXTranslation());
+                System.out.println("translated y: " + tc_asteroid.getYTranslation());
+                System.out.println("angle: " + tc_asteroid.getAngle());
 
                 //TODO delete here + delete count too
                 gc.setFill(Color.RED);
                 gc.setFont(new Font(15));
-                gc.fillText(Integer.toString(typeCastAsteroid.myIndex), translated_x - typeCastAsteroid.getRadius(),
-                        translated_y - typeCastAsteroid.getRadius());
+                gc.fillText(Integer.toString(tc_asteroid.myIndex), tc_asteroid.getXTranslation() - tc_asteroid.getRadius(),
+                        tc_asteroid.getYTranslation() - tc_asteroid.getRadius());
                 //TODO delete above here
 
-                gc.translate(translated_x, translated_y);
+                gc.translate(tc_asteroid.getXTranslation(), tc_asteroid.getYTranslation());
+                gc.rotate(tc_asteroid.getAngle());
                 gc.setStroke(Color.RED);
-                gc.strokePolygon(typeCastAsteroid.getxPoints(), typeCastAsteroid.getyPoints(),
-                        typeCastAsteroid.getxPoints().length);
+                gc.strokePolygon(tc_asteroid.getxPoints(), tc_asteroid.getyPoints(),
+                        tc_asteroid.getxPoints().length);
                 gc.setFill(Color.DARKGRAY);
-                gc.fillPolygon(typeCastAsteroid.getxPoints(), typeCastAsteroid.getyPoints(),
-                        typeCastAsteroid.getxPoints().length);
+                gc.fillPolygon(tc_asteroid.getxPoints(), tc_asteroid.getyPoints(),
+                        tc_asteroid.getxPoints().length);
                 gc.restore();
             }
         }
