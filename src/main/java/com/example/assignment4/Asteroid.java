@@ -56,7 +56,7 @@ public class Asteroid extends SpaceObject
         Random random = new Random();
         xVelocity = random.nextDouble() * 0.0001;
         yVelocity = random.nextDouble() * 0.0001;
-        aVelocity = random.nextDouble(0.1, 0.5);
+        aVelocity = random.nextDouble(0.05, 0.2);
     }
 
     public double[] getxPoints()

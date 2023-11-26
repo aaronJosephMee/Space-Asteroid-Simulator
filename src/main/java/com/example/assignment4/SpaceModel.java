@@ -49,7 +49,7 @@ public class SpaceModel
 
         asteroidList.add(asteroid);
 
-        publisher.publishToChannel("create-asteroid");
+        publisher.publishToChannel(ChannelName.CREATE_ASTEROID);
     }
 
     public void moveAsteroids()
@@ -81,13 +81,13 @@ public class SpaceModel
             }
         }
         //TODO change this to update-asteroid
-        publisher.publishToChannel("create-asteroid");
+        publisher.publishToChannel(ChannelName.CREATE_ASTEROID);
     }
 
     public void setPublisher(PublishSubscribe publisher)
     {
         this.publisher = publisher;
-        publisher.publishToChannel("create-star");
+        publisher.publishToChannel(ChannelName.CREATE_STAR);
     }
 
 }

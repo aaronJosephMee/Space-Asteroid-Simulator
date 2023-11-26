@@ -2,13 +2,21 @@ package com.example.assignment4;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+
+enum ChannelName {
+    CREATE_ASTEROID,
+    CREATE_STAR,
+    WORLD_ROTATE,
+    DELETE
+}
 
 public class PublishSubscribe
 {
-    private HashMap<String, ArrayList<Subscriber>> channels = new HashMap<>();
 
-    public void createChannel(String key, ArrayList<Subscriber> subscribers)
+    // we can use an ENUM instead of a string, to avoid making an error when typing
+    private HashMap<ChannelName, ArrayList<Subscriber>> channels = new HashMap<>();
+
+    public void createChannel(ChannelName key, ArrayList<Subscriber> subscribers)
     {
         channels.put(key, subscribers);
     }
@@ -18,7 +26,7 @@ public class PublishSubscribe
 
     // This currently doesn't work for iModel because we're passing a List of SpaceObjects,
     // and we need to notify the View of the worldRotation (which is a double)
-    public void publishToChannel(String key)
+    public void publishToChannel(ChannelName key)
     {
         ArrayList<Subscriber> subscribers = channels.get(key);
         for(Subscriber subscriber : subscribers)

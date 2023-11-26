@@ -30,11 +30,11 @@ public class MainUI extends StackPane
         subscribersForCreate.add(spaceView);
         subscribersForDelete.add(spaceView);
 
-        publishSubscribe.createChannel("create-asteroid", subscribersForCreate);
-        publishSubscribe.createChannel("create-star", subscribersForCreate);
+        publishSubscribe.createChannel(ChannelName.CREATE_ASTEROID, subscribersForCreate);
+        publishSubscribe.createChannel(ChannelName.CREATE_STAR, subscribersForCreate);
         //TODO change the subscribersForCreate
-        publishSubscribe.createChannel("world-rotate", subscribersForCreate);
-        publishSubscribe.createChannel("delete", subscribersForDelete);
+        publishSubscribe.createChannel(ChannelName.WORLD_ROTATE, subscribersForCreate);
+        publishSubscribe.createChannel(ChannelName.DELETE, subscribersForDelete);
 
         spaceModel.setPublisher(publishSubscribe);
         iModel.setPublisher(publishSubscribe);

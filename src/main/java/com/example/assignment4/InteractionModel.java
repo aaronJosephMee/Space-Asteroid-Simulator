@@ -18,6 +18,6 @@ public class InteractionModel
     public void incrementWorldRotation(double incr)
     {
         this.worldRotation += incr;
-        publisher.publishToChannel("world-rotate");
+        publisher.publishToChannel(ChannelName.WORLD_ROTATE);
     }
 }

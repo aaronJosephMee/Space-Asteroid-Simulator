@@ -104,17 +104,17 @@ public class SpaceView extends StackPane implements Subscriber
         this.iModel = iModel;
     }
 
-    public void receiveNotification(String channelName)
+    public void receiveNotification(ChannelName channelName)
     {
-        if(channelName.equals("create-star"))
+        if(channelName == ChannelName.CREATE_STAR)
         {
             this.stars = spaceModel.getStars();
         }
-        else if(channelName.equals("create-asteroid"))
+        else if(channelName == ChannelName.CREATE_ASTEROID)
         {
             this.asteroids = spaceModel.getAsteroidList();
         }
-        else if(channelName.equals("world-rotate"))
+        else if(channelName == ChannelName.WORLD_ROTATE)
         {
             //TODO update world rotation
             this.worldRotation = iModel.getWorldRotation();
