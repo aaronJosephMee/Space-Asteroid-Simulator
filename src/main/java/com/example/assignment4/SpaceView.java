@@ -16,8 +16,8 @@ public class SpaceView extends StackPane implements Subscriber
     GraphicsContext gc;
     SpaceModel spaceModel;
     InteractionModel iModel;
-    List<SpaceObject> stars = new ArrayList<>();
-    List<SpaceObject> asteroids = new ArrayList<>();
+    List<Star> stars = new ArrayList<>();
+    List<Asteroid> asteroids = new ArrayList<>();
     double worldRotation = 0;
 
     public SpaceView(int canvasSize)
@@ -46,50 +46,49 @@ public class SpaceView extends StackPane implements Subscriber
 
         // Draw white dots for stars
         gc.setFill(Color.WHITE);
-        for (SpaceObject star: stars)
+        for (Star star: stars)
         {
+            //TODO use setters for translated coords
             double translated_x = star.getNormalizedX() * canvasSize;
             double translated_y = star.getNormalizedY() * canvasSize;
-            gc.fillOval(translated_x, translated_y, 2 * star.getRadius(), 2 * star.getRadius());
+            double translated_radius = star.getNormalizedRadius() * ((double) canvasSize / 400);
+            gc.fillOval(translated_x, translated_y, translated_radius, translated_radius);
         }
 
         // Draw asteroids
-        for (SpaceObject asteroid: asteroids)
+        for (Asteroid asteroid: asteroids)
         {
-            if(asteroid instanceof Asteroid)
-            {
-                gc.save();
-                gc.setFill(Color.DARKGRAY);
+            gc.save();
+            gc.setFill(Color.DARKGRAY);
 
-                Asteroid tc_asteroid = (Asteroid) asteroid;
-                System.out.println("Asteroid: " + tc_asteroid + '\n');
+            //System.out.println("Asteroid: " + asteroid + '\n');
 
-                tc_asteroid.setXTranslation(tc_asteroid.getNormalizedX() * canvasSize);
-                tc_asteroid.setYTranslation(tc_asteroid.getNormalizedY() * canvasSize);
+            asteroid.setTranslatedX(asteroid.getNormalizedX() * canvasSize);
+            asteroid.setTranslatedY(asteroid.getNormalizedY() * canvasSize);
+            asteroid.setTranslatedRadius(asteroid.getNormalizedRadius() * ((double) canvasSize / 30));
 
-                System.out.println("normalized x: " + tc_asteroid.getNormalizedX());
-                System.out.println("normalized y: " + tc_asteroid.getNormalizedY());
-                System.out.println("translated x: " + tc_asteroid.getXTranslation());
-                System.out.println("translated y: " + tc_asteroid.getYTranslation());
-                System.out.println("angle: " + tc_asteroid.getAngle());
+//            System.out.println("normalized x: " + asteroid.getNormalizedX());
+//            System.out.println("normalized y: " + asteroid.getNormalizedY());
+//            System.out.println("translated x: " + asteroid.getTranslatedX());
+//            System.out.println("translated y: " + asteroid.getTranslatedY());
+//            System.out.println("angle: " + asteroid.getAngle());
 
-                //TODO delete here + delete count too
-                gc.setFill(Color.RED);
-                gc.setFont(new Font(15));
-                gc.fillText(Integer.toString(tc_asteroid.myIndex), tc_asteroid.getXTranslation() - tc_asteroid.getRadius(),
-                        tc_asteroid.getYTranslation() - tc_asteroid.getRadius());
-                //TODO delete above here
+            //TODO delete here + delete count too
+            gc.setFill(Color.RED);
+            gc.setFont(new Font(15));
+            gc.fillText(Integer.toString(asteroid.myIndex), asteroid.getTranslatedX() - asteroid.getTranslatedRadius(),
+                    asteroid.getTranslatedY() - asteroid.getTranslatedRadius());
+            //TODO delete above here
 
-                gc.translate(tc_asteroid.getXTranslation(), tc_asteroid.getYTranslation());
-                gc.rotate(tc_asteroid.getAngle());
-                gc.setStroke(Color.RED);
-                gc.strokePolygon(tc_asteroid.getxPoints(), tc_asteroid.getyPoints(),
-                        tc_asteroid.getxPoints().length);
-                gc.setFill(Color.DARKGRAY);
-                gc.fillPolygon(tc_asteroid.getxPoints(), tc_asteroid.getyPoints(),
-                        tc_asteroid.getxPoints().length);
-                gc.restore();
-            }
+            gc.translate(asteroid.getTranslatedX(), asteroid.getTranslatedY());
+            gc.rotate(asteroid.getAngle());
+            gc.setStroke(Color.RED);
+            gc.strokePolygon(asteroid.getxPoints(), asteroid.getyPoints(),
+                    asteroid.getxPoints().length);
+            gc.setFill(Color.DARKGRAY);
+            gc.fillPolygon(asteroid.getxPoints(), asteroid.getyPoints(),
+                    asteroid.getxPoints().length);
+            gc.restore();
         }
         gc.restore();
     }
@@ -104,6 +103,10 @@ public class SpaceView extends StackPane implements Subscriber
         this.iModel = iModel;
     }
 
+    public void setupEvents(SpaceController controller)
+    {
+        this.setOnMouseMoved(controller::handleMouseMoved);
+    }
     public void receiveNotification(ChannelName channelName)
     {
         if(channelName == ChannelName.CREATE_STAR)

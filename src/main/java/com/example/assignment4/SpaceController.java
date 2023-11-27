@@ -1,5 +1,7 @@
 package com.example.assignment4;
 
+import javafx.scene.input.MouseEvent;
+
 public class SpaceController
 {
     private SpaceModel spaceModel;
@@ -9,6 +11,11 @@ public class SpaceController
     {
         spaceModel.moveAsteroids();
         spaceModel.spinAsteroids();
+    }
+
+    public void handleMouseMoved(MouseEvent event)
+    {
+        iModel.setMouseCoords(event.getX(), event.getY());
     }
 
     public void setSpaceModel(SpaceModel spaceModel)

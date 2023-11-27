@@ -5,11 +5,10 @@ import java.util.Random;
 
 public class Asteroid extends SpaceObject
 {
-    private double[] xPoints;
-    private double[] yPoints;
-    private int sections;
-    private double xTranslation;
-    private double yTranslation;
+    private final double[] xPoints;
+    private final double[] yPoints;
+    private final double[] randomSectionLengths;
+    private final int sections;
     private double angle;
     private double xVelocity;
     private double yVelocity;
@@ -17,9 +16,9 @@ public class Asteroid extends SpaceObject
     public int myIndex;
 
 
-    public Asteroid(double normalizedX, double normalizedY, double radius, int myIndex)
+    public Asteroid(double normalizedX, double normalizedY, double normalizedRadius, int myIndex)
     {
-        super(normalizedX, normalizedY, radius);
+        super(normalizedX, normalizedY, normalizedRadius);
         this.myIndex = myIndex;
         this.angle = 0.0;
 
@@ -28,13 +27,26 @@ public class Asteroid extends SpaceObject
 
         xPoints = new double[sections + 1];
         yPoints = new double[sections + 1];
+        randomSectionLengths = new Random()
+                .doubles(sections + 1, 0.3, 1.2)
+                .toArray();
 
+        calculateSections(normalizedRadius);
+
+        Random random = new Random();
+        xVelocity = random.nextDouble() * 0.0001;
+        yVelocity = random.nextDouble() * 0.0001;
+        aVelocity = random.nextDouble(0.05, 0.2);
+    }
+
+    private void calculateSections(double radius)
+    {
         // Divide the 2*PI circle into sections and generate points
         for (int sectionNum = 0; sectionNum <= sections; sectionNum++)
         {
             double sectionAngle = (2 * Math.PI) * ((double) sectionNum /sections);
 
-            double sectionRadius = radius * (new Random().nextDouble(0.5, 1.5));
+            double sectionRadius = radius * randomSectionLengths[sectionNum];
 
             // Find the point on the circle of the chosen radius
             double x = sectionRadius * Math.cos(sectionAngle);
@@ -52,11 +64,19 @@ public class Asteroid extends SpaceObject
                 yPoints[sectionNum] = yPoints[0];
             }
         }
+    }
 
-        Random random = new Random();
-        xVelocity = random.nextDouble() * 0.0001;
-        yVelocity = random.nextDouble() * 0.0001;
-        aVelocity = random.nextDouble(0.05, 0.2);
+    @Override
+    public void setTranslatedRadius(double translatedRadius)
+    {
+//        System.out.println("Normalized rad: " + getNormalizedRadius());
+//        System.out.println("Translated rad: " + translatedRadius);
+//        System.out.println("XPoints before: " + Arrays.toString(xPoints));
+//        System.out.println("YPoints before: " + Arrays.toString(yPoints));
+        calculateSections(translatedRadius);
+//        System.out.println("XPoints after: " + Arrays.toString(xPoints));
+//        System.out.println("YPoints after: " + Arrays.toString(yPoints));
+        super.setTranslatedRadius(translatedRadius);
     }
 
     public double[] getxPoints()
@@ -67,27 +87,6 @@ public class Asteroid extends SpaceObject
     public double[] getyPoints()
     {
         return yPoints;
-    }
-
-
-    public double getXTranslation()
-    {
-        return xTranslation;
-    }
-
-    public void setXTranslation(double xTranslation)
-    {
-        this.xTranslation = xTranslation;
-    }
-
-    public double getYTranslation()
-    {
-        return yTranslation;
-    }
-
-    public void setYTranslation(double yTranslation)
-    {
-        this.yTranslation = yTranslation;
     }
 
     public double getAngle()

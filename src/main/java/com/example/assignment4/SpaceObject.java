@@ -4,13 +4,16 @@ public class SpaceObject
 {
     private double normalizedX;
     private double normalizedY;
-    private double radius;
+    private double normalizedRadius;
+    private double translatedX;
+    private double translatedY;
+    private double translatedRadius;
 
-    public SpaceObject(double normalizedX, double normalizedY, double radius)
+    public SpaceObject(double normalizedX, double normalizedY, double normalizedRadius)
     {
         this.normalizedX = normalizedX;
         this.normalizedY = normalizedY;
-        this.radius = radius;
+        this.normalizedRadius = normalizedRadius;
     }
 
     public double getNormalizedX()
@@ -55,13 +58,43 @@ public class SpaceObject
         }
     }
 
-    public double getRadius()
+    public double getNormalizedRadius()
     {
-        return radius;
+        return normalizedRadius;
     }
 
-    public void setRadius(double radius)
+    public void setNormalizedRadius(double normalizedRadius)
     {
-        this.radius = radius;
+        this.normalizedRadius = normalizedRadius;
+    }
+
+    public double getTranslatedX()
+    {
+        return translatedX;
+    }
+
+    public void setTranslatedX(double translatedX)
+    {
+        this.translatedX = translatedX;
+    }
+
+    public double getTranslatedY()
+    {
+        return translatedY;
+    }
+
+    public void setTranslatedY(double translatedY)
+    {
+        this.translatedY = translatedY;
+    }
+
+    public double getTranslatedRadius()
+    {
+        return translatedRadius;
+    }
+
+    public void setTranslatedRadius(double translatedRadius)
+    {
+        this.translatedRadius = translatedRadius;
     }
 }

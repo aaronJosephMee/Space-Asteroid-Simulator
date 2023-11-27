@@ -7,6 +7,7 @@ enum ChannelName {
     CREATE_ASTEROID,
     CREATE_STAR,
     WORLD_ROTATE,
+    MOUSE_MOVED,
     DELETE
 }
 

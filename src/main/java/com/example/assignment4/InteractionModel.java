@@ -4,6 +4,7 @@ public class InteractionModel
 {
     private PublishSubscribe publisher;
     private double worldRotation = 0;
+    private double mouseX, mouseY;
 
     public void setPublisher(PublishSubscribe publisher)
     {
@@ -19,5 +20,20 @@ public class InteractionModel
     {
         this.worldRotation += incr;
         publisher.publishToChannel(ChannelName.WORLD_ROTATE);
+    }
+
+    public void setMouseCoords(double mouseX, double mouseY)
+    {
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
+        publisher.publishToChannel(ChannelName.MOUSE_MOVED);
+    }
+    public double getMouseX()
+    {
+        return mouseX;
+    }
+    public double getMouseY()
+    {
+        return mouseY;
     }
 }

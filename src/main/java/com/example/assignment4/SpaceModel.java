@@ -7,8 +7,8 @@ import java.util.Random;
 public class SpaceModel
 {
     private Asteroid asteroid;
-    private List<SpaceObject> asteroidList;
-    private List<SpaceObject> stars;
+    private List<Asteroid> asteroidList;
+    private List<Star> stars;
 
     private PublishSubscribe publisher;
 
@@ -30,12 +30,12 @@ public class SpaceModel
         }
     }
 
-    public List<SpaceObject> getAsteroidList()
+    public List<Asteroid> getAsteroidList()
     {
         return asteroidList;
     }
 
-    public List<SpaceObject> getStars()
+    public List<Star> getStars()
     {
         return stars;
     }
@@ -45,7 +45,7 @@ public class SpaceModel
         Random random = new Random();
 
         asteroid = new Asteroid(random.nextDouble(), random.nextDouble(),
-                random.nextDouble(10, 19), asteroidList.size());
+                random.nextDouble(0.7, 1.1), asteroidList.size());
 
         asteroidList.add(asteroid);
 
@@ -54,16 +54,12 @@ public class SpaceModel
 
     public void moveAsteroids()
     {
-        for (SpaceObject asteroid : asteroidList)
+        for (Asteroid asteroid : asteroidList)
         {
-            if (asteroid instanceof Asteroid)
-            {
                 //TODO this sets the normalized x and y instead of the translated ones,
                 // change if necessary
-                Asteroid tc_asteroid = (Asteroid) asteroid;
-                tc_asteroid.setNormalizedX(tc_asteroid.getNormalizedX() + tc_asteroid.getXVelocity());
-                tc_asteroid.setNormalizedY(tc_asteroid.getNormalizedY() + tc_asteroid.getYVelocity());
-            }
+                asteroid.setNormalizedX(asteroid.getNormalizedX() + asteroid.getXVelocity());
+                asteroid.setNormalizedY(asteroid.getNormalizedY() + asteroid.getYVelocity());
         }
         //TODO change this to update-asteroid
         //publisher.publishToChannel("create-asteroid", asteroidList);
@@ -71,14 +67,10 @@ public class SpaceModel
 
     public void spinAsteroids()
     {
-        for (SpaceObject asteroid : asteroidList)
+        for (Asteroid asteroid : asteroidList)
         {
-            if (asteroid instanceof Asteroid)
-            {
-                Asteroid tc_asteroid = (Asteroid) asteroid;
                 // Update asteroid's angle based on its angular velocity
-                tc_asteroid.setAngle(tc_asteroid.getAngle() + tc_asteroid.getAVelocity());
-            }
+                asteroid.setAngle(asteroid.getAngle() + asteroid.getAVelocity());
         }
         //TODO change this to update-asteroid
         publisher.publishToChannel(ChannelName.CREATE_ASTEROID);
