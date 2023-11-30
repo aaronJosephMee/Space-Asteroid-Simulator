@@ -18,7 +18,7 @@ public class SpaceView extends StackPane implements Subscriber
     InteractionModel iModel;
     List<Star> stars = new ArrayList<>();
     List<Asteroid> asteroids = new ArrayList<>();
-    double worldRotation = 0;
+    double currentRotationAngle = 0;
 
     public SpaceView(int canvasSize)
     {
@@ -44,7 +44,7 @@ public class SpaceView extends StackPane implements Subscriber
         // Rotate depending on world rotation
         gc.save();
         gc.translate((double) canvasSize / 2, (double) canvasSize / 2); // Translate to the center
-        gc.rotate(worldRotation); // Rotate
+        gc.rotate(currentRotationAngle); // Rotate
         gc.translate((double) -canvasSize / 2, (double) -canvasSize / 2);
 
         // Draw white dots for stars
@@ -123,7 +123,7 @@ public class SpaceView extends StackPane implements Subscriber
         else if(channelName == ChannelName.WORLD_ROTATE)
         {
             //TODO update world rotation
-            this.worldRotation = iModel.getWorldRotation();
+            this.currentRotationAngle = iModel.getCurrentRotation();
         }
         drawOuterSpace();
     }

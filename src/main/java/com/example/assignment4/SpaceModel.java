@@ -11,6 +11,8 @@ public class SpaceModel
     private List<Star> stars;
 
     private PublishSubscribe publisher;
+    private boolean asteroidsMoving;
+    private boolean asteroidsSpinning;
 
 
     public SpaceModel()
@@ -54,12 +56,15 @@ public class SpaceModel
 
     public void moveAsteroids()
     {
-        for (Asteroid asteroid : asteroidList)
+        if(asteroidsMoving)
         {
+            for (Asteroid asteroid : asteroidList)
+            {
                 //TODO this sets the normalized x and y instead of the translated ones,
                 // change if necessary
                 asteroid.setNormalizedX(asteroid.getNormalizedX() + asteroid.getXVelocity());
                 asteroid.setNormalizedY(asteroid.getNormalizedY() + asteroid.getYVelocity());
+            }
         }
         //TODO change this to update-asteroid
         //publisher.publishToChannel("create-asteroid", asteroidList);
@@ -67,13 +72,37 @@ public class SpaceModel
 
     public void spinAsteroids()
     {
-        for (Asteroid asteroid : asteroidList)
+        if(asteroidsSpinning)
         {
+            for (Asteroid asteroid : asteroidList)
+            {
                 // Update asteroid's angle based on its angular velocity
                 asteroid.setAngle(asteroid.getAngle() + asteroid.getAVelocity());
+            }
         }
         //TODO change this to update-asteroid
         publisher.publishToChannel(ChannelName.CREATE_ASTEROID);
+    }
+
+    public void setAsteroidsMoving(boolean asteroidsMoving)
+    {
+        this.asteroidsMoving = asteroidsMoving;
+        //TODO add this to update-asteroid
+    }
+
+    public void setAsteroidsSpinning(boolean asteroidsSpinning)
+    {
+        this.asteroidsSpinning = asteroidsSpinning;
+    }
+
+    public boolean areAsteroidsMoving()
+    {
+        return asteroidsMoving;
+    }
+
+    public boolean areAsteroidsSpinning()
+    {
+        return asteroidsSpinning;
     }
 
     public void setPublisher(PublishSubscribe publisher)

@@ -3,7 +3,8 @@ package com.example.assignment4;
 public class InteractionModel
 {
     private PublishSubscribe publisher;
-    private double worldRotation = 0;
+    private double rotationSpeed = 0.01;
+    private double currentRotation = 0.0;
     private double mouseX, mouseY;
 
     public void setPublisher(PublishSubscribe publisher)
@@ -11,15 +12,34 @@ public class InteractionModel
         this.publisher = publisher;
     }
 
-    public double getWorldRotation()
+    public double getRotationSpeed()
     {
-        return worldRotation;
+        return rotationSpeed;
     }
 
-    public void incrementWorldRotation(double incr)
+    public void setRotationSpeed(double speed)
     {
-        this.worldRotation += incr;
+        this.rotationSpeed = speed;
+        //TODO uncomment this for the world rotation
         //publisher.publishToChannel(ChannelName.WORLD_ROTATE);
+    }
+
+    public double getCurrentRotation()
+    {
+        return currentRotation;
+    }
+
+    //TODO delete this
+//    public void setCurrentRotation(double currentRotation)
+//    {
+//        this.currentRotation = currentRotation;
+//    }
+
+    public void rotateWorld()
+    {
+        currentRotation += rotationSpeed;
+        //TODO uncomment this for the world rotation
+        publisher.publishToChannel(ChannelName.WORLD_ROTATE);
     }
 
     public void setMouseCoords(double mouseX, double mouseY)

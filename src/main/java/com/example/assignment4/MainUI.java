@@ -18,6 +18,7 @@ public class MainUI extends GridPane
         SpaceView spaceView = new SpaceView(850);
         SpaceView miniatureView = new SpaceView(150);
         CursorView cursorView = new CursorView(150);
+        ControlPanelView controlPanelView = new ControlPanelView();
         PublishSubscribe pubSub = new PublishSubscribe();
 
         // Link them together
@@ -31,6 +32,8 @@ public class MainUI extends GridPane
         miniatureView.setiModel(iModel);
         cursorView.setSpaceModel(spaceModel);
         cursorView.setiModel(iModel);
+        controlPanelView.setSpaceModel(spaceModel);
+        controlPanelView.setiModel(iModel);
 
         // Add PublishSubscribe implementation:
         ArrayList<Subscriber> subscribersForCreate = new ArrayList<>();
@@ -41,7 +44,7 @@ public class MainUI extends GridPane
         // Add the SpaceViews to each list:
         subscribersForCreate.addAll(Arrays.asList(spaceView, miniatureView, cursorView));
         subscribersForDelete.addAll(Arrays.asList(spaceView, miniatureView, cursorView));
-        subscribersForWorldRotate.addAll(Arrays.asList(spaceView, miniatureView));
+        subscribersForWorldRotate.addAll(Arrays.asList(spaceView, miniatureView, controlPanelView));
         subscribersForMouseMoved.add(cursorView);
 
 
@@ -63,8 +66,8 @@ public class MainUI extends GridPane
 
         VBox sidePanel = new VBox();
         sidePanel.setStyle("-fx-base: #191919; -fx-background-color: #191919");
-        sidePanel.getChildren().add(miniatureView);
-        sidePanel.getChildren().add(cursorView);
+        sidePanel.getChildren().addAll(miniatureView, cursorView, controlPanelView);
+        sidePanel.setSpacing(5);
 
         this.add(sidePanel, 0, 0);
         this.add(spaceView, 1, 0);
@@ -75,7 +78,6 @@ public class MainUI extends GridPane
             public void handle(long now)
             {
                 spaceController.handleAnimationTick();
-                iModel.incrementWorldRotation(0.01);
             }
         };
 

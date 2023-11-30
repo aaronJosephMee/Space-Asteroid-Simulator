@@ -11,6 +11,7 @@ public class SpaceController
     {
         spaceModel.moveAsteroids();
         spaceModel.spinAsteroids();
+        iModel.rotateWorld();
     }
 
     public void handleMouseMoved(MouseEvent event, double canvasSize)
