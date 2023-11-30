@@ -1,56 +1,27 @@
 package com.example.assignment4;
 
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class CursorView extends StackPane implements Subscriber
+public class CursorView extends SpaceView implements Subscriber
 {
-    private final int canvasSize;
-    Canvas cursorCanvas;
-    GraphicsContext gc;
-    SpaceModel spaceModel;
-    InteractionModel iModel;
-    List<Star> stars = new ArrayList<>();
-    List<Asteroid> asteroids = new ArrayList<>();
     private double mouseX, mouseY;
-    private final double zoomFactor = 2.0;
 
     public CursorView(int canvasSize)
     {
-        this.canvasSize = canvasSize;
-
-        this.cursorCanvas = new Canvas(canvasSize, canvasSize);
-        this.gc = cursorCanvas.getGraphicsContext2D();
-        drawCursor(0,0);
-        this.getChildren().add(cursorCanvas);
+        super(canvasSize);
+        mouseX = 0;
+        mouseY = 0;
     }
+
+
 
     private void drawCursor(double x, double y) {
         // Clear the canvas
-        gc.clearRect(0, 0, cursorCanvas.getWidth(), cursorCanvas.getHeight());
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gc.save();
 
-        // Draw a rectangle representing the 2X zoomed region centered on the cursor's location
-        double rectSize = canvasSize / zoomFactor;
-        double startX = x - rectSize / 2;
-        double startY = y - rectSize / 2;
-
-        gc.setFill(Color.RED); // Set the cursor color
-        gc.fillRect(startX, startY, rectSize, rectSize);
-    }
-
-    public void setSpaceModel(SpaceModel spaceModel)
-    {
-        this.spaceModel = spaceModel;
-    }
-
-    public void setiModel(InteractionModel iModel)
-    {
-        this.iModel = iModel;
+        gc.translate(-x, -y);
+        gc.scale(2, 2);
+        drawOuterSpace();
+        gc.restore();
     }
 
     public void receiveNotification(ChannelName channelName)
@@ -65,10 +36,12 @@ public class CursorView extends StackPane implements Subscriber
         }
         else if (channelName == ChannelName.MOUSE_MOVED)
         {
-            //TODO update mouse coords
-            System.out.println("Cursor coordinates: " + iModel.getMouseX()  + " " + iModel.getMouseY());
-            drawCursor(iModel.getMouseX(), iModel.getMouseY());
+            //TODO delete print when done
+            //System.out.println("Cursor coordinates: " + iModel.getMouseX() + " " + iModel.getMouseY());
+            mouseX = iModel.getMouseX() * canvasSize;
+            mouseY = iModel.getMouseY() * canvasSize;
         }
+        drawCursor(mouseX, mouseY);
     }
 
 }

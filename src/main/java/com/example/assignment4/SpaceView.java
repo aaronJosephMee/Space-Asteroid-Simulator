@@ -11,7 +11,7 @@ import java.util.List;
 
 public class SpaceView extends StackPane implements Subscriber
 {
-    private final int canvasSize;
+    final int canvasSize;
     Canvas canvas;
     GraphicsContext gc;
     SpaceModel spaceModel;
@@ -37,6 +37,9 @@ public class SpaceView extends StackPane implements Subscriber
         // Draw outer space
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        gc.setStroke(Color.WHITE);
+        gc.strokeRect(0,0, canvas.getWidth(), canvas.getHeight());
 
         // Rotate depending on world rotation
         gc.save();
@@ -105,7 +108,7 @@ public class SpaceView extends StackPane implements Subscriber
 
     public void setupEvents(SpaceController controller)
     {
-        this.setOnMouseMoved(controller::handleMouseMoved);
+        this.setOnMouseMoved(e -> controller.handleMouseMoved(e, canvasSize));
     }
     public void receiveNotification(ChannelName channelName)
     {

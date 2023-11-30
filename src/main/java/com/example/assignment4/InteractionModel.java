@@ -19,7 +19,7 @@ public class InteractionModel
     public void incrementWorldRotation(double incr)
     {
         this.worldRotation += incr;
-        publisher.publishToChannel(ChannelName.WORLD_ROTATE);
+        //publisher.publishToChannel(ChannelName.WORLD_ROTATE);
     }
 
     public void setMouseCoords(double mouseX, double mouseY)

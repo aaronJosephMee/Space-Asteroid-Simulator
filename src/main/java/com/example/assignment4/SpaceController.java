@@ -13,9 +13,9 @@ public class SpaceController
         spaceModel.spinAsteroids();
     }
 
-    public void handleMouseMoved(MouseEvent event)
+    public void handleMouseMoved(MouseEvent event, double canvasSize)
     {
-        iModel.setMouseCoords(event.getX(), event.getY());
+        iModel.setMouseCoords(event.getX() /canvasSize, event.getY() / canvasSize);
     }
 
     public void setSpaceModel(SpaceModel spaceModel)
