@@ -30,6 +30,7 @@ public class MainUI extends GridPane
         spaceView.setupEvents(spaceController);
         miniatureView.setSpaceModel(spaceModel);
         miniatureView.setiModel(iModel);
+        miniatureView.setupEvents(spaceController);
         cursorView.setSpaceModel(spaceModel);
         cursorView.setiModel(iModel);
         controlPanelView.setSpaceModel(spaceModel);
@@ -37,13 +38,11 @@ public class MainUI extends GridPane
 
         // Add PublishSubscribe implementation:
         ArrayList<Subscriber> subscribersForCreate = new ArrayList<>();
-        ArrayList<Subscriber> subscribersForDelete = new ArrayList<>();
         ArrayList<Subscriber> subscribersForWorldRotate = new ArrayList<>();
         ArrayList<Subscriber> subscribersForMouseMoved = new ArrayList<>();
 
         // Add the SpaceViews to each list:
         subscribersForCreate.addAll(Arrays.asList(spaceView, miniatureView, cursorView));
-        subscribersForDelete.addAll(Arrays.asList(spaceView, miniatureView, cursorView));
         subscribersForWorldRotate.addAll(Arrays.asList(spaceView, miniatureView, controlPanelView));
         subscribersForMouseMoved.add(cursorView);
 
@@ -53,7 +52,6 @@ public class MainUI extends GridPane
         pubSub.createChannel(ChannelName.CREATE_STAR, subscribersForCreate);
         pubSub.createChannel(ChannelName.WORLD_ROTATE, subscribersForWorldRotate);
         pubSub.createChannel(ChannelName.MOUSE_MOVED, subscribersForMouseMoved);
-        pubSub.createChannel(ChannelName.DELETE, subscribersForDelete);
 
         spaceModel.setPublisher(pubSub);
         iModel.setPublisher(pubSub);
@@ -61,7 +59,7 @@ public class MainUI extends GridPane
         // Create 10 asteroids using createAsteroid() method
         for (int i = 0; i < 10; i++)
         {
-            spaceModel.createAsteroid();
+            spaceModel.createAsteroid(850);
         }
 
         VBox sidePanel = new VBox();

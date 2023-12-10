@@ -6,14 +6,11 @@ import java.util.Random;
 
 public class SpaceModel
 {
-    private Asteroid asteroid;
     private List<Asteroid> asteroidList;
     private List<Star> stars;
-
     private PublishSubscribe publisher;
-    private boolean asteroidsMoving;
-    private boolean asteroidsSpinning;
-
+    private boolean asteroidsMoving = true;
+    private boolean asteroidsSpinning = true;
 
     public SpaceModel()
     {
@@ -42,12 +39,12 @@ public class SpaceModel
         return stars;
     }
 
-    public void createAsteroid()
+    public void createAsteroid(int canvasSize)
     {
         Random random = new Random();
 
-        asteroid = new Asteroid(random.nextDouble(), random.nextDouble(),
-                random.nextDouble(0.7, 1.1), asteroidList.size());
+        Asteroid asteroid = new Asteroid(random.nextDouble(), random.nextDouble(),
+                random.nextDouble(0.04, 0.06), asteroidList.size(), canvasSize);
 
         asteroidList.add(asteroid);
 
@@ -90,6 +87,26 @@ public class SpaceModel
         //TODO add this to update-asteroid
     }
 
+    public void dragAsteroids(List<Asteroid> asteroids, double dx, double dy)
+    {
+        for(Asteroid asteroid : asteroids)
+        {
+            asteroid.setNormalizedX(asteroid.getNormalizedX() + dx);
+            asteroid.setNormalizedY(asteroid.getNormalizedY() + dy);
+        }
+        publisher.publishToChannel(ChannelName.CREATE_ASTEROID);
+    }
+
+    public void setAsteroidsVelocity(List<Asteroid> asteroids, double vX, double vY)
+    {
+        for (Asteroid asteroid : asteroids)
+        {
+            System.out.println("Velocity: " + vX + " " + vY);
+            asteroid.setVelocity(vX, vY);
+        }
+        publisher.publishToChannel(ChannelName.CREATE_ASTEROID);
+    }
+
     public void setAsteroidsSpinning(boolean asteroidsSpinning)
     {
         this.asteroidsSpinning = asteroidsSpinning;
@@ -111,4 +128,17 @@ public class SpaceModel
         publisher.publishToChannel(ChannelName.CREATE_STAR);
     }
 
+    public Asteroid getAsteroidAtCoords(double x, double y)
+    {
+        for(Asteroid asteroid : asteroidList.reversed())
+        {
+            //TODO take into account the world rotation
+            if(asteroid.contains(x, y))
+            {
+                //TODO how to pass these selected ones to the iModel?
+                return asteroid;
+            }
+        }
+        return null;
+    }
 }

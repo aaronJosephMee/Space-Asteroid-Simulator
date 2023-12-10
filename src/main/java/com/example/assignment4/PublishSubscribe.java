@@ -8,7 +8,6 @@ enum ChannelName {
     CREATE_STAR,
     WORLD_ROTATE,
     MOUSE_MOVED,
-    DELETE
 }
 
 public class PublishSubscribe

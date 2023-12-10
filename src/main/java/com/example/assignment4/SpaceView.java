@@ -51,24 +51,21 @@ public class SpaceView extends StackPane implements Subscriber
         gc.setFill(Color.WHITE);
         for (Star star: stars)
         {
-            //TODO use setters for translated coords
-            double translated_x = star.getNormalizedX() * canvasSize;
-            double translated_y = star.getNormalizedY() * canvasSize;
-            double translated_radius = star.getNormalizedRadius() * ((double) canvasSize / 400);
-            gc.fillOval(translated_x, translated_y, translated_radius, translated_radius);
+            star.setTranslatedX(star.getNormalizedX() * canvasSize);
+            star.setTranslatedY(star.getNormalizedY() * canvasSize);
+            star.setTranslatedRadius(star.getNormalizedRadius() * ((double) canvasSize / 400));
+            gc.fillOval(star.getTranslatedX(), star.getTranslatedY(), star.getTranslatedRadius(), star.getTranslatedRadius());
         }
 
         // Draw asteroids
         for (Asteroid asteroid: asteroids)
         {
             gc.save();
-            gc.setFill(Color.DARKGRAY);
-
             //System.out.println("Asteroid: " + asteroid + '\n');
 
             asteroid.setTranslatedX(asteroid.getNormalizedX() * canvasSize);
             asteroid.setTranslatedY(asteroid.getNormalizedY() * canvasSize);
-            asteroid.setTranslatedRadius(asteroid.getNormalizedRadius() * ((double) canvasSize / 30));
+            asteroid.setTranslatedRadius(asteroid.getNormalizedRadius() *  canvasSize);
 
 //            System.out.println("normalized x: " + asteroid.getNormalizedX());
 //            System.out.println("normalized y: " + asteroid.getNormalizedY());
@@ -88,12 +85,23 @@ public class SpaceView extends StackPane implements Subscriber
             gc.setStroke(Color.RED);
             gc.strokePolygon(asteroid.getxPoints(), asteroid.getyPoints(),
                     asteroid.getxPoints().length);
-            gc.setFill(Color.DARKGRAY);
+            gc.setFill(asteroid.isSelected() ? Color.YELLOW : Color.DARKGRAY);
             gc.fillPolygon(asteroid.getxPoints(), asteroid.getyPoints(),
                     asteroid.getxPoints().length);
             gc.restore();
         }
         gc.restore();
+
+        gc.setFill(Color.GRAY.deriveColor(0, 1, 1, 0.5));
+        //TODO change this for P/S when imodel changes, and normalize coords for cursorSize
+        gc.fillOval((iModel.getMouseX() * canvasSize) - (iModel.getAreaCursorSize() / 2),
+                (iModel.getMouseY() * canvasSize) - (iModel.getAreaCursorSize() / 2),
+                iModel.getAreaCursorSize(), iModel.getAreaCursorSize());
+    }
+
+    public void drawMouseArea()
+    {
+
     }
 
     public void setSpaceModel(SpaceModel spaceModel)
@@ -109,6 +117,10 @@ public class SpaceView extends StackPane implements Subscriber
     public void setupEvents(SpaceController controller)
     {
         this.setOnMouseMoved(e -> controller.handleMouseMoved(e, canvasSize));
+        this.setOnMouseDragged(e -> controller.handleMouseDragged(e, canvasSize));
+        this.setOnMouseClicked(e -> controller.handleMousePressed(e));
+        this.setOnMouseReleased(e -> controller.handleMouseReleased(e, canvasSize));
+        this.setOnScroll(e -> controller.handleWheel(e));
     }
     public void receiveNotification(ChannelName channelName)
     {
@@ -126,5 +138,6 @@ public class SpaceView extends StackPane implements Subscriber
             this.currentRotationAngle = iModel.getCurrentRotation();
         }
         drawOuterSpace();
+        drawMouseArea();
     }
 }
