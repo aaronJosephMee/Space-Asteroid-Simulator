@@ -97,13 +97,13 @@ public class InteractionModel
         {
             areaCursorSize = 0;
         }
-        else if (areaCursorSize > 200)
+        else if (areaCursorSize > 0.3)
         {
-            areaCursorSize = 200;
+            areaCursorSize = 0.3;
         }
 
 
         //TODO change this channel
-        publisher.publishToChannel(ChannelName.CREATE_ASTEROID);
+        publisher.publishToChannel(ChannelName.AREA_CURSOR);
     }
 }

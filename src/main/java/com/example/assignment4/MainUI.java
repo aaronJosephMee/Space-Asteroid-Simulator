@@ -40,11 +40,13 @@ public class MainUI extends GridPane
         ArrayList<Subscriber> subscribersForCreate = new ArrayList<>();
         ArrayList<Subscriber> subscribersForWorldRotate = new ArrayList<>();
         ArrayList<Subscriber> subscribersForMouseMoved = new ArrayList<>();
+        ArrayList<Subscriber> subscribersForAreaCursor = new ArrayList<>();
 
         // Add the SpaceViews to each list:
         subscribersForCreate.addAll(Arrays.asList(spaceView, miniatureView, cursorView));
         subscribersForWorldRotate.addAll(Arrays.asList(spaceView, miniatureView, controlPanelView));
-        subscribersForMouseMoved.add(cursorView);
+        subscribersForMouseMoved.addAll(Arrays.asList(cursorView, spaceView, miniatureView));
+        subscribersForAreaCursor.addAll(Arrays.asList(spaceView, miniatureView));
 
 
         // Create the channels and add the subscribers for each channel
@@ -52,6 +54,7 @@ public class MainUI extends GridPane
         pubSub.createChannel(ChannelName.CREATE_STAR, subscribersForCreate);
         pubSub.createChannel(ChannelName.WORLD_ROTATE, subscribersForWorldRotate);
         pubSub.createChannel(ChannelName.MOUSE_MOVED, subscribersForMouseMoved);
+        pubSub.createChannel(ChannelName.AREA_CURSOR, subscribersForAreaCursor);
 
         spaceModel.setPublisher(pubSub);
         iModel.setPublisher(pubSub);

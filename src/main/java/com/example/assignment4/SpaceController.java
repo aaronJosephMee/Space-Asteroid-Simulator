@@ -3,8 +3,6 @@ package com.example.assignment4;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 
-import java.util.List;
-
 public class SpaceController
 {
     private SpaceModel spaceModel;
@@ -33,9 +31,9 @@ public class SpaceController
         iModel.setMouseCoords(event.getX() / canvasSize, event.getY() / canvasSize);
     }
 
-    public void handleMousePressed(MouseEvent event)
+    public void handleMousePressed(MouseEvent event, int canvasSize)
     {
-        Asteroid asteroid = spaceModel.getAsteroidAtCoords(event.getX(), event.getY());
+        Asteroid asteroid = spaceModel.getAsteroidAtCoords(event.getX() / canvasSize, event.getY() / canvasSize);
         if(asteroid != null)
         {
             if(asteroid.isSelected())
@@ -84,9 +82,9 @@ public class SpaceController
         }
     }
 
-    public void handleWheel(ScrollEvent event)
+    public void handleWheel(ScrollEvent event, int canvasSize)
     {
-        iModel.modifyCursorSize(event.getDeltaY());
+        iModel.modifyCursorSize(event.getDeltaY() / canvasSize);
     }
 
     public void setSpaceModel(SpaceModel spaceModel)

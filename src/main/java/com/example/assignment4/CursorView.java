@@ -18,6 +18,8 @@ public class CursorView extends SpaceView implements Subscriber
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         gc.save();
 
+        //TODO delete this
+
         // issue: either redrawing the view its not being centred, taking mouse coords and untransforming them
         // print the mouseX and mouseY after its transformed it should be (0,0)
         // it should be between 0.5 to -0.5 (these are home coords), all points should be in that range
@@ -44,6 +46,7 @@ public class CursorView extends SpaceView implements Subscriber
         // your mouse location is relative to the translation that I did
         gc.translate(-x, -y);
         gc.scale(2, 2);
+
         drawOuterSpace();
         gc.restore();
     }

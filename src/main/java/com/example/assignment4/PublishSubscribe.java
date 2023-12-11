@@ -6,8 +6,10 @@ import java.util.HashMap;
 enum ChannelName {
     CREATE_ASTEROID,
     CREATE_STAR,
+    UPDATE_ASTEROIDS,
     WORLD_ROTATE,
     MOUSE_MOVED,
+    AREA_CURSOR
 }
 
 public class PublishSubscribe

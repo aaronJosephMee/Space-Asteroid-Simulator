@@ -18,6 +18,9 @@ public class SpaceView extends StackPane implements Subscriber
     InteractionModel iModel;
     List<Star> stars = new ArrayList<>();
     List<Asteroid> asteroids = new ArrayList<>();
+    double mouseX = 0;
+    double mouseY = 0;
+    double cursorSize = 0;
     double currentRotationAngle = 0;
 
     public SpaceView(int canvasSize)
@@ -94,9 +97,9 @@ public class SpaceView extends StackPane implements Subscriber
 
         gc.setFill(Color.GRAY.deriveColor(0, 1, 1, 0.5));
         //TODO change this for P/S when imodel changes, and normalize coords for cursorSize
-        gc.fillOval((iModel.getMouseX() * canvasSize) - (iModel.getAreaCursorSize() / 2),
-                (iModel.getMouseY() * canvasSize) - (iModel.getAreaCursorSize() / 2),
-                iModel.getAreaCursorSize(), iModel.getAreaCursorSize());
+        gc.fillOval((mouseX * canvasSize) - ((cursorSize * canvasSize) / 2),
+                (mouseY * canvasSize) - ((cursorSize * canvasSize) / 2),
+                cursorSize * canvasSize, cursorSize * canvasSize);
     }
 
     public void drawMouseArea()
@@ -118,24 +121,31 @@ public class SpaceView extends StackPane implements Subscriber
     {
         this.setOnMouseMoved(e -> controller.handleMouseMoved(e, canvasSize));
         this.setOnMouseDragged(e -> controller.handleMouseDragged(e, canvasSize));
-        this.setOnMouseClicked(e -> controller.handleMousePressed(e));
+        this.setOnMouseClicked(e -> controller.handleMousePressed(e, canvasSize));
         this.setOnMouseReleased(e -> controller.handleMouseReleased(e, canvasSize));
-        this.setOnScroll(e -> controller.handleWheel(e));
+        this.setOnScroll(e -> controller.handleWheel(e, canvasSize));
     }
     public void receiveNotification(ChannelName channelName)
     {
-        if(channelName == ChannelName.CREATE_STAR)
+        if (channelName == ChannelName.CREATE_STAR)
         {
             this.stars = spaceModel.getStars();
-        }
-        else if(channelName == ChannelName.CREATE_ASTEROID)
+        } else if (channelName == ChannelName.CREATE_ASTEROID)
         {
             this.asteroids = spaceModel.getAsteroidList();
-        }
-        else if(channelName == ChannelName.WORLD_ROTATE)
+        } else if (channelName == ChannelName.WORLD_ROTATE)
         {
             //TODO update world rotation
             this.currentRotationAngle = iModel.getCurrentRotation();
+        } else if (channelName == ChannelName.AREA_CURSOR)
+        {
+            this.mouseX = iModel.getMouseX();
+            this.mouseY = iModel.getMouseY();
+            this.cursorSize = iModel.getAreaCursorSize();
+        } else if (channelName == ChannelName.MOUSE_MOVED)
+        {
+            this.mouseX = iModel.getMouseX();
+            this.mouseY =  iModel.getMouseY();
         }
         drawOuterSpace();
         drawMouseArea();

@@ -25,7 +25,10 @@ public class Asteroid extends SpaceObject
     private final double originalYVelocity;
     private double aVelocity;
     private boolean selected = false;
+    private final double minimumRadius = 0.3;
+    private final double maximumRadius = 1.2;
     public int myIndex;
+
 
     public Asteroid(double normalizedX, double normalizedY, double normalizedRadius, int myIndex, int canvasSize)
     {
@@ -40,7 +43,7 @@ public class Asteroid extends SpaceObject
         xPoints = new double[sections + 1];
         yPoints = new double[sections + 1];
         randomSectionLengths = new Random()
-                .doubles(sections + 1, 0.3, 1.2)
+                .doubles(sections + 1, minimumRadius, maximumRadius)
                 .toArray();
 
         calculateSections(normalizedRadius);
@@ -158,16 +161,6 @@ public class Asteroid extends SpaceObject
         this.yVelocity = originalYVelocity;
     }
 
-    public int getCanvasSize()
-    {
-        return canvasSize;
-    }
-
-    public void setCanvasSize(int canvasSize)
-    {
-
-    }
-
     public double getYVelocity()
     {
         return yVelocity;
@@ -204,16 +197,16 @@ public class Asteroid extends SpaceObject
         System.out.println("Angle: " + Math.toRadians(this.angle));
 
         System.out.println("X: " + x + " Y: " + y);
-        System.out.println("Translated x: " + (getNormalizedX() * canvasSize) + " and y: "  + (getNormalizedY() * canvasSize));
-        double rotatedX = x - (getNormalizedX() * canvasSize) + buffer.getWidth() / 2;
-        double rotatedY = y - (getNormalizedY() * canvasSize) + buffer.getHeight() / 2;
+        System.out.println("Norm x in asteroid: " + getNormalizedX() + " and y: " + getNormalizedY());
+        double rotatedX = x - getNormalizedX() + buffer.getWidth() / (2 * canvasSize );
+        double rotatedY = y - getNormalizedY() + buffer.getHeight() / (2 * canvasSize);
 
         //TODO use rotateX and rotateY to get the actual mouse coords
 //        double rotatedX = rotateX(x, y, Math.toRadians(this.angle));
 //        double rotatedY = rotateY(x, y, Math.toRadians(this.angle));
         System.out.println("Rotated X: " + rotatedX);
         System.out.println("Rotated Y: " + rotatedY);
-        if (rotatedX >= 0 && rotatedY < buffer.getWidth() && rotatedY >= 0 && rotatedX < buffer.getHeight())
+        if (rotatedX >= 0 && rotatedY < buffer.getWidth() /canvasSize && rotatedY >= 0 && rotatedX < buffer.getHeight() / canvasSize)
         {
             System.out.println("INSIDE ASTEROID!!!");
             System.out.println("Colour in click: " + reader.getColor((int) rotatedX, (int) rotatedY));

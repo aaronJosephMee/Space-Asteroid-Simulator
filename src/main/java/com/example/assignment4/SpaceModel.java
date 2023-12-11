@@ -6,8 +6,8 @@ import java.util.Random;
 
 public class SpaceModel
 {
-    private List<Asteroid> asteroidList;
-    private List<Star> stars;
+    private final List<Asteroid> asteroidList;
+    private final List<Star> stars;
     private PublishSubscribe publisher;
     private boolean asteroidsMoving = true;
     private boolean asteroidsSpinning = true;
@@ -101,7 +101,6 @@ public class SpaceModel
     {
         for (Asteroid asteroid : asteroids)
         {
-            System.out.println("Velocity: " + vX + " " + vY);
             asteroid.setVelocity(vX, vY);
         }
         publisher.publishToChannel(ChannelName.CREATE_ASTEROID);
@@ -135,7 +134,6 @@ public class SpaceModel
             //TODO take into account the world rotation
             if(asteroid.contains(x, y))
             {
-                //TODO how to pass these selected ones to the iModel?
                 return asteroid;
             }
         }
