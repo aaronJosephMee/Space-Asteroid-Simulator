@@ -57,14 +57,10 @@ public class SpaceModel
         {
             for (Asteroid asteroid : asteroidList)
             {
-                //TODO this sets the normalized x and y instead of the translated ones,
-                // change if necessary
                 asteroid.setNormalizedX(asteroid.getNormalizedX() + asteroid.getXVelocity());
                 asteroid.setNormalizedY(asteroid.getNormalizedY() + asteroid.getYVelocity());
             }
         }
-        //TODO change this to update-asteroid
-        //publisher.publishToChannel("create-asteroid", asteroidList);
     }
 
     public void spinAsteroids()
@@ -77,14 +73,12 @@ public class SpaceModel
                 asteroid.setAngle(asteroid.getAngle() + asteroid.getAVelocity());
             }
         }
-        //TODO change this to update-asteroid
         publisher.publishToChannel(ChannelName.CREATE_ASTEROID);
     }
 
     public void setAsteroidsMoving(boolean asteroidsMoving)
     {
         this.asteroidsMoving = asteroidsMoving;
-        //TODO add this to update-asteroid
     }
 
     public void dragAsteroids(List<Asteroid> asteroids, double dx, double dy)
@@ -131,12 +125,25 @@ public class SpaceModel
     {
         for(Asteroid asteroid : asteroidList.reversed())
         {
-            //TODO take into account the world rotation
             if(asteroid.contains(x, y))
             {
                 return asteroid;
             }
         }
         return null;
+    }
+
+    public ArrayList<Asteroid> getAsteroidsInsideCursor(double x, double y, double rad)
+    {
+        ArrayList<Asteroid> selectedAsteroids = new ArrayList<>();
+
+        for (Asteroid asteroid : asteroidList)
+        {
+            if(asteroid.isAsteroidInsideCursor(x , y, rad))
+            {
+                selectedAsteroids.add(asteroid);
+            }
+        }
+        return selectedAsteroids;
     }
 }

@@ -64,47 +64,27 @@ public class SpaceView extends StackPane implements Subscriber
         for (Asteroid asteroid: asteroids)
         {
             gc.save();
-            //System.out.println("Asteroid: " + asteroid + '\n');
 
             asteroid.setTranslatedX(asteroid.getNormalizedX() * canvasSize);
             asteroid.setTranslatedY(asteroid.getNormalizedY() * canvasSize);
             asteroid.setTranslatedRadius(asteroid.getNormalizedRadius() *  canvasSize);
 
-//            System.out.println("normalized x: " + asteroid.getNormalizedX());
-//            System.out.println("normalized y: " + asteroid.getNormalizedY());
-//            System.out.println("translated x: " + asteroid.getTranslatedX());
-//            System.out.println("translated y: " + asteroid.getTranslatedY());
-//            System.out.println("angle: " + asteroid.getAngle());
-
-            //TODO delete here + delete count too
-            gc.setFill(Color.RED);
-            gc.setFont(new Font(15));
-            gc.fillText(Integer.toString(asteroid.myIndex), asteroid.getTranslatedX() - asteroid.getTranslatedRadius(),
-                    asteroid.getTranslatedY() - asteroid.getTranslatedRadius());
-            //TODO delete above here
-
             gc.translate(asteroid.getTranslatedX(), asteroid.getTranslatedY());
             gc.rotate(asteroid.getAngle());
             gc.setStroke(Color.RED);
-            gc.strokePolygon(asteroid.getxPoints(), asteroid.getyPoints(),
-                    asteroid.getxPoints().length);
+            gc.strokePolygon(asteroid.getTranslatedXPoints(), asteroid.getTranslatedYPoints(),
+                    asteroid.getTranslatedXPoints().length);
             gc.setFill(asteroid.isSelected() ? Color.YELLOW : Color.DARKGRAY);
-            gc.fillPolygon(asteroid.getxPoints(), asteroid.getyPoints(),
-                    asteroid.getxPoints().length);
+            gc.fillPolygon(asteroid.getTranslatedXPoints(), asteroid.getTranslatedYPoints(),
+                    asteroid.getTranslatedXPoints().length);
             gc.restore();
         }
         gc.restore();
 
         gc.setFill(Color.GRAY.deriveColor(0, 1, 1, 0.5));
-        //TODO change this for P/S when imodel changes, and normalize coords for cursorSize
         gc.fillOval((mouseX * canvasSize) - ((cursorSize * canvasSize) / 2),
                 (mouseY * canvasSize) - ((cursorSize * canvasSize) / 2),
                 cursorSize * canvasSize, cursorSize * canvasSize);
-    }
-
-    public void drawMouseArea()
-    {
-
     }
 
     public void setSpaceModel(SpaceModel spaceModel)
@@ -135,7 +115,6 @@ public class SpaceView extends StackPane implements Subscriber
             this.asteroids = spaceModel.getAsteroidList();
         } else if (channelName == ChannelName.WORLD_ROTATE)
         {
-            //TODO update world rotation
             this.currentRotationAngle = iModel.getCurrentRotation();
         } else if (channelName == ChannelName.AREA_CURSOR)
         {
@@ -148,6 +127,5 @@ public class SpaceView extends StackPane implements Subscriber
             this.mouseY =  iModel.getMouseY();
         }
         drawOuterSpace();
-        drawMouseArea();
     }
 }

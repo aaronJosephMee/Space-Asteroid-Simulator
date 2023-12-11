@@ -10,8 +10,10 @@ import java.util.Random;
 
 public class Asteroid extends SpaceObject
 {
-    private final double[] xPoints;
-    private final double[] yPoints;
+    private final double[] normalizedXPoints;
+    private final double[] normalizedYPoints;
+    private final double[] translatedXPoints;
+    private final double[] translatedYPoints;
     private final double[] randomSectionLengths;
     private final int canvasSize;
     private Canvas offscreen;
@@ -37,16 +39,20 @@ public class Asteroid extends SpaceObject
         this.canvasSize = canvasSize;
         this.angle = 0.0;
 
-        // Choose a random number of sections between 4 and 8
-        sections = new Random().nextInt(4, 9);
+        // Choose a random number of sections between 4 and 8 (plus the last section, which is the
+        //  same as the initial one)
+        sections = new Random().nextInt(4, 9) + 1;
 
-        xPoints = new double[sections + 1];
-        yPoints = new double[sections + 1];
+        normalizedXPoints = new double[sections];
+        normalizedYPoints = new double[sections];
+        translatedXPoints = new double[sections];
+        translatedYPoints = new double[sections];
+
         randomSectionLengths = new Random()
-                .doubles(sections + 1, minimumRadius, maximumRadius)
+                .doubles(sections, minimumRadius, maximumRadius)
                 .toArray();
 
-        calculateSections(normalizedRadius);
+        calculateSections(normalizedXPoints, normalizedYPoints, normalizedRadius);
 
         Random random = new Random();
         xVelocity = random.nextDouble() * 0.0001;
@@ -61,7 +67,6 @@ public class Asteroid extends SpaceObject
     private void drawBitmap(int canvasSize)
     {
         offscreen = new Canvas(getNormalizedRadius() * canvasSize, getNormalizedRadius() * canvasSize);
-        //System.out.println("width: " + offscreen.getWidth() + " height: " + offscreen.getHeight());
         GraphicsContext offscreenGC = offscreen.getGraphicsContext2D();
         buffer = new WritableImage((int) offscreen.getWidth(), (int) offscreen.getHeight());
 
@@ -70,21 +75,18 @@ public class Asteroid extends SpaceObject
         offscreenGC.setFill(Color.WHITE);
 
         offscreenGC.translate(offscreen.getWidth()/2, offscreen.getHeight()/2);
-        //TODO check that this is right, do we need to translate/rotate before filling polygon?
-        double[] xPointsTranslated = Arrays.stream(xPoints).map(e -> e * offscreen.getWidth()).toArray();
-        double[] yPointsTranslated = Arrays.stream(yPoints).map(e -> e * offscreen.getHeight()).toArray();
-        //System.out.println("X points bitmap: " + Arrays.toString(xPointsTranslated));
-        //System.out.println("Y points bitmap: " + Arrays.toString(yPointsTranslated));
-        offscreenGC.fillPolygon(xPointsTranslated, yPointsTranslated, xPoints.length);
+        double[] xPointsTranslated = Arrays.stream(normalizedXPoints).map(e -> e * offscreen.getWidth()).toArray();
+        double[] yPointsTranslated = Arrays.stream(normalizedYPoints).map(e -> e * offscreen.getHeight()).toArray();
+        offscreenGC.fillPolygon(xPointsTranslated, yPointsTranslated, normalizedXPoints.length);
 
         offscreen.snapshot(null, buffer);
         reader = buffer.getPixelReader();
     }
 
-    private void calculateSections(double radius)
+    private void calculateSections(double[] xArray, double[] yArray, double radius)
     {
         // Divide the 2*PI circle into sections and generate points
-        for (int sectionNum = 0; sectionNum <= sections; sectionNum++)
+        for (int sectionNum = 0; sectionNum < sections; sectionNum++)
         {
             double sectionAngle = (2 * Math.PI) * ((double) sectionNum /sections);
 
@@ -95,44 +97,33 @@ public class Asteroid extends SpaceObject
             double y = sectionRadius * Math.sin(sectionAngle);
 
             // Add the x and y values to the arrays for the asteroid
-            if(sections != sectionNum)
+            if(sectionNum < (sections - 1))
             {
-                xPoints[sectionNum] = x;
-                yPoints[sectionNum] = y;
+                xArray[sectionNum] = x;
+                yArray[sectionNum] = y;
             }
             else
-            {
-                xPoints[sectionNum] = xPoints[0];
-                yPoints[sectionNum] = yPoints[0];
+            {   // Only for the last section, add the initial point
+                xArray[sectionNum] = xArray[0];
+                yArray[sectionNum] = yArray[0];
             }
         }
-//        System.out.println("//////// Asteroid " + myIndex);
-//        System.out.println("X points: " + Arrays.toString(xPoints));
-//        System.out.println("Y points: " + Arrays.toString(yPoints));
-
     }
 
     @Override
     public void setTranslatedRadius(double translatedRadius)
     {
-//        System.out.println("Normalized rad: " + getNormalizedRadius());
-//        System.out.println("Translated rad: " + translatedRadius);
-//        System.out.println("XPoints before: " + Arrays.toString(xPoints));
-//        System.out.println("YPoints before: " + Arrays.toString(yPoints));
-        calculateSections(translatedRadius);
-//        System.out.println("XPoints after: " + Arrays.toString(xPoints));
-//        System.out.println("YPoints after: " + Arrays.toString(yPoints));
+        calculateSections(translatedXPoints, translatedYPoints, translatedRadius);
         super.setTranslatedRadius(translatedRadius);
     }
-
-    public double[] getxPoints()
+    public double[] getTranslatedXPoints()
     {
-        return xPoints;
+        return translatedXPoints;
     }
 
-    public double[] getyPoints()
+    public double[] getTranslatedYPoints()
     {
-        return yPoints;
+        return translatedYPoints;
     }
 
     public double getAngle()
@@ -176,42 +167,26 @@ public class Asteroid extends SpaceObject
 
     public String toString()
     {
-        return "X Points: " + Arrays.toString(xPoints)
-                + "\n          Y Points: " + Arrays.toString(yPoints)
+        return "X Points: " + Arrays.toString(normalizedXPoints)
+                + "\n          Y Points: " + Arrays.toString(normalizedYPoints)
                 + "\n          Sections: " + sections
                 + "\n          Index: " + myIndex;
     }
 
     private double rotateX(double x, double y, double radians) {
-        System.out.println("X coord: " + x);
         return Math.cos(radians) * x - Math.sin(radians) * y;
     }
     private double rotateY(double x, double y, double radians) {
-        System.out.println("Y coord: " + y);
         return Math.sin(radians) * x + Math.cos(radians) * y;
     }
 
     public boolean contains(double x, double y)
     {
-        System.out.println("####### Asteroid "  + this.myIndex + " W: " + buffer.getWidth() + " H: " + buffer.getHeight());
-        System.out.println("Angle: " + Math.toRadians(this.angle));
-
-        System.out.println("X: " + x + " Y: " + y);
-        System.out.println("Norm x in asteroid: " + getNormalizedX() + " and y: " + getNormalizedY());
-        double rotatedX = x - getNormalizedX() + buffer.getWidth() / (2 * canvasSize );
+        double rotatedX = x - getNormalizedX() + buffer.getWidth() / (2 * canvasSize);
         double rotatedY = y - getNormalizedY() + buffer.getHeight() / (2 * canvasSize);
 
-        //TODO use rotateX and rotateY to get the actual mouse coords
-//        double rotatedX = rotateX(x, y, Math.toRadians(this.angle));
-//        double rotatedY = rotateY(x, y, Math.toRadians(this.angle));
-        System.out.println("Rotated X: " + rotatedX);
-        System.out.println("Rotated Y: " + rotatedY);
         if (rotatedX >= 0 && rotatedY < buffer.getWidth() /canvasSize && rotatedY >= 0 && rotatedX < buffer.getHeight() / canvasSize)
         {
-            System.out.println("INSIDE ASTEROID!!!");
-            System.out.println("Colour in click: " + reader.getColor((int) rotatedX, (int) rotatedY));
-            boolean rightColour = reader.getColor((int) rotatedX, (int) rotatedY).equals(Color.WHITE);
-            System.out.println(rightColour);
             return true;
         }
         else
@@ -228,5 +203,20 @@ public class Asteroid extends SpaceObject
     public void setSelected(boolean selected)
     {
         this.selected = selected;
+    }
+
+    public boolean isAsteroidInsideCursor(double xCursor, double yCursor, double radiusCursor)
+    {
+        for(int i = 0; i < sections; i++)
+        {
+            double x = getNormalizedX() + normalizedXPoints[i];
+            double y = getNormalizedY() + normalizedYPoints[i];
+            if(x > (xCursor - radiusCursor / 2) && x < (xCursor + radiusCursor / 2)
+                && y > (yCursor - radiusCursor / 2) && y < yCursor + radiusCursor / 2)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

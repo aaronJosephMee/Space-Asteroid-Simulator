@@ -3,6 +3,8 @@ package com.example.assignment4;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 
+import java.util.ArrayList;
+
 public class SpaceController
 {
     private SpaceModel spaceModel;
@@ -33,6 +35,12 @@ public class SpaceController
 
     public void handleMousePressed(MouseEvent event, int canvasSize)
     {
+        double rotation = Math.toRadians(iModel.getCurrentRotation());
+        double rotatedX = (event.getX() / canvasSize) * Math.cos(rotation)
+                - (event.getY() / canvasSize) * Math.sin(rotation);
+        double rotatedY = (event.getX() / canvasSize) * Math.sin(rotation)
+                 + (event.getY() / canvasSize) * Math.cos(rotation);
+
         Asteroid asteroid = spaceModel.getAsteroidAtCoords(event.getX() / canvasSize, event.getY() / canvasSize);
         if(asteroid != null)
         {
@@ -42,6 +50,20 @@ public class SpaceController
             } else
             {
                 iModel.addAsteroidToSelection(asteroid);
+            }
+        }
+        ArrayList<Asteroid> asteroidsInAreaCursor = spaceModel.getAsteroidsInsideCursor(
+                event.getX() / canvasSize, event.getY() / canvasSize, iModel.getAreaCursorSize());
+
+        for(Asteroid a : asteroidsInAreaCursor)
+        {
+            if(a.isSelected() && !a.equals(asteroid))
+            {
+                iModel.removeAsteroidFromSelection(a);
+            }
+            else
+            {
+                iModel.addAsteroidToSelection(a);
             }
         }
     }
